@@ -1,0 +1,733 @@
+<%- include('../partials/header') -%>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+  }
+
+  .tabs-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+
+  .tabs-nav {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 2rem;
+  }
+
+  .tab-button {
+    padding: 1rem 2rem;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+  }
+
+  .tab-button.active {
+    color: #4a00e0;
+    background: rgba(74, 0, 224, 0.05);
+  }
+
+  .tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #4a00e0, #8e44ad);
+    border-radius: 1px;
+  }
+
+  .tab-count {
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    color: white;
+    border-radius: 50px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .session-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .session-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4a00e0, #8e44ad);
+  }
+
+  .session-card.pending::before {
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+  }
+
+  .session-card.completed::before {
+    background: linear-gradient(90deg, #28a745, #20c997);
+  }
+
+  .session-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  }
+
+  .session-header {
+    display: flex;
+    justify-content: between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .session-info {
+    flex: 1;
+  }
+
+  .session-status {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-confirmed {
+    background: rgba(74, 0, 224, 0.1);
+    color: #4a00e0;
+    border: 1px solid rgba(74, 0, 224, 0.2);
+  }
+
+  .status-pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #856404;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+  }
+
+  .status-completed {
+    background: rgba(40, 167, 69, 0.1);
+    color: #155724;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+  }
+
+  .session-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .detail-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+  }
+
+  .detail-content {
+    flex: 1;
+  }
+
+  .detail-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .detail-value {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .session-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .action-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-accept {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  .btn-accept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+  }
+
+  .btn-reject {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  }
+
+  .btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #666;
+  }
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 2rem;
+  }
+
+  .empty-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  .empty-description {
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .stats-banner {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: #666;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .page-header {
+      padding: 1.5rem;
+    }
+    
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .tabs-nav {
+      flex-direction: column;
+    }
+    
+    .session-details {
+      grid-template-columns: 1fr;
+    }
+    
+    .session-actions {
+      flex-direction: column;
+    }
+    
+    .stats-banner {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">My Bookings</h1>
+    <p class="page-subtitle">Manage your tutoring sessions and requests</p>
+  </div>
+
+  <!-- Stats Banner -->
+  <div class="stats-banner">
+    <div class="stat-item">
+      <div class="stat-number"><%= (sessions || []).filter(s => s.status === 'confirmed').length %></div>
+      <div class="stat-label">Confirmed Sessions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number"><%= (sessions || []).filter(s => s.status === 'pending').length %></div>
+      <div class="stat-label">Pending Requests</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number"><%= (sessions || []).filter(s => s.status === 'completed').length %></div>
+      <div class="stat-label">Completed Sessions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number"><%= (sessions || []).length %></div>
+      <div class="stat-label">Total Sessions</div>
+    </div>
+  </div>
+
+  <div class="tabs-container">
+    <div class="tabs-nav">
+      <button class="tab-button active" onclick="switchTab('confirmed')" id="confirmed-tab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+        </svg>
+        Confirmed Sessions
+        <span class="tab-count"><%= (sessions || []).filter(s => s.status === 'confirmed').length %></span>
+      </button>
+      
+      <button class="tab-button" onclick="switchTab('pending')" id="pending-tab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+        </svg>
+        Pending Requests
+        <span class="tab-count"><%= (sessions || []).filter(s => s.status === 'pending').length %></span>
+      </button>
+      
+      <button class="tab-button" onclick="switchTab('completed')" id="completed-tab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+        Completed Sessions
+        <span class="tab-count"><%= (sessions || []).filter(s => s.status === 'completed').length %></span>
+      </button>
+    </div>
+
+    <!-- Confirmed Sessions Tab -->
+    <div id="confirmed-content" class="tab-content active">
+      <% const confirmedSessions = (sessions || []).filter(s => s.status === 'confirmed'); %>
+      <% if (confirmedSessions.length > 0) { %>
+        <% confirmedSessions.forEach(session => { %>
+          <div class="session-card confirmed">
+            <div class="session-header">
+              <div class="session-info"></div>
+              <div class="session-status status-confirmed">Confirmed</div>
+            </div>
+            
+            <div class="session-details">
+              <div class="detail-item">
+                <div class="detail-icon">👤</div>
+                <div class="detail-content">
+                  <div class="detail-label">Student</div>
+                  <div class="detail-value"><%= session.student?.name || session.studentName || 'Unknown' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">📚</div>
+                <div class="detail-content">
+                  <div class="detail-label">Subject</div>
+                  <div class="detail-value"><%= session.subject || 'Not specified' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">📅</div>
+                <div class="detail-content">
+                  <div class="detail-label">Date</div>
+                  <div class="detail-value"><%= session.date || 'TBD' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">🕐</div>
+                <div class="detail-content">
+                  <div class="detail-label">Time</div>
+                  <div class="detail-value"><%= session.time || 'TBD' %></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="session-actions">
+              <a href="/session/reschedule/<%= session._id %>" class="action-btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM8 6a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5z"/>
+                </svg>
+                Reschedule
+              </a>
+              <a href="/session/complete/<%= session._id %>" class="action-btn btn-accept">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                </svg>
+                Mark Complete
+              </a>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">✅</div>
+          <div class="empty-title">No Confirmed Sessions</div>
+          <div class="empty-description">You don't have any confirmed sessions yet. Pending requests will appear here once accepted.</div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Pending Requests Tab -->
+    <div id="pending-content" class="tab-content">
+      <% const pendingSessions = (sessions || []).filter(s => s.status === 'pending'); %>
+      <% if (pendingSessions.length > 0) { %>
+        <% pendingSessions.forEach(session => { %>
+          <div class="session-card pending">
+            <div class="session-header">
+              <div class="session-info"></div>
+              <div class="session-status status-pending">Pending Review</div>
+            </div>
+            
+            <div class="session-details">
+              <div class="detail-item">
+                <div class="detail-icon">👤</div>
+                <div class="detail-content">
+                  <div class="detail-label">Student</div>
+                  <div class="detail-value"><%= session.student?.name || session.studentName || 'Unknown' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">📚</div>
+                <div class="detail-content">
+                  <div class="detail-label">Subject</div>
+                  <div class="detail-value"><%= session.subject || 'Not specified' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">📅</div>
+                <div class="detail-content">
+                  <div class="detail-label">Requested Date</div>
+                  <div class="detail-value"><%= session.date || 'TBD' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">🕐</div>
+                <div class="detail-content">
+                  <div class="detail-label">Requested Time</div>
+                  <div class="detail-value"><%= session.time || 'TBD' %></div>
+                </div>
+              </div>
+            </div>
+            
+            <% if (session.message) { %>
+              <div class="session-message">
+                <h4>Student Message:</h4>
+                <p><%= session.message %></p>
+              </div>
+            <% } %>
+            
+            <div class="session-actions">
+              <a href="/session/reject/<%= session._id %>" class="action-btn btn-reject">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                </svg>
+                Reject
+              </a>
+              <a href="/session/accept/<%= session._id %>" class="action-btn btn-accept">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                </svg>
+                Accept Request
+              </a>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">No Pending Requests</div>
+          <div class="empty-description">You don't have any pending session requests at the moment. New requests from students will appear here.</div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Completed Sessions Tab -->
+    <div id="completed-content" class="tab-content">
+      <% const completedSessions = (sessions || []).filter(s => s.status === 'completed'); %>
+      <% if (completedSessions.length > 0) { %>
+        <% completedSessions.forEach(session => { %>
+          <div class="session-card completed">
+            <div class="session-header">
+              <div class="session-info"></div>
+              <div class="session-status status-completed">Completed</div>
+            </div>
+            
+            <div class="session-details">
+              <div class="detail-item">
+                <div class="detail-icon">👤</div>
+                <div class="detail-content">
+                  <div class="detail-label">Student</div>
+                  <div class="detail-value"><%= session.student?.name || session.studentName || 'Unknown' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">📚</div>
+                <div class="detail-content">
+                  <div class="detail-label">Subject</div>
+                  <div class="detail-value"><%= session.subject || 'Not specified' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">📅</div>
+                <div class="detail-content">
+                  <div class="detail-label">Session Date</div>
+                  <div class="detail-value"><%= session.date || 'N/A' %></div>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">⭐</div>
+                <div class="detail-content">
+                  <div class="detail-label">Rating</div>
+                  <div class="detail-value"><%= session.rating ? session.rating + '/5 stars' : 'Not rated yet' %></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="session-actions">
+              <a href="/session/feedback/<%= session._id %>" class="action-btn btn-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                </svg>
+                View Feedback
+              </a>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">🎓</div>
+          <div class="empty-title">No Completed Sessions</div>
+          <div class="empty-description">Your completed tutoring sessions will appear here. Start accepting requests to build your teaching history!</div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName + '-content').classList.add('active');
+    
+    // Add active class to selected tab button
+    document.getElementById(tabName + '-tab').classList.add('active');
+  }
+
+  // Add confirmation for reject actions
+  document.querySelectorAll('.btn-reject').forEach(button => {
+    button.addEventListener('click', function(e) {
+      if (!confirm('Are you sure you want to reject this session request? This action cannot be undone.')) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // Add confirmation for complete actions
+  document.querySelectorAll('a[href*="/session/complete/"]').forEach(button => {
+    button.addEventListener('click', function(e) {
+      if (!confirm('Mark this session as completed? This will notify the student and update your records.')) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // Add hover effects to session cards
+  document.querySelectorAll('.session-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-5px) scale(1.01)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+
+  // Auto-refresh pending requests every 30 seconds
+  setInterval(() => {
+    const currentTab = document.querySelector('.tab-button.active').id;
+    if (currentTab === 'pending-tab') {
+      // You can implement auto-refresh logic here
+      console.log('Checking for new pending requests...');
+    }
+  }, 30000);
+
+  // Add keyboard navigation for tabs
+  document.addEventListener('keydown', function(e) {
+    if (e.altKey) {
+      switch(e.key) {
+        case '1':
+          switchTab('confirmed');
+          break;
+        case '2':
+          switchTab('pending');
+          break;
+        case '3':
+          switchTab('completed');
+          break;
+      }
+    }
+  });
+
+  // Show notification for pending requests
+  window.addEventListener('load', function() {
+    const pendingCount = parseInt(document.querySelector('#pending-tab .tab-count').textContent);
+    if (pendingCount > 0) {
+      console.log(`You have ${pendingCount} pending session request(s) that need your attention.`);
+      // You can replace this with a toast notification
+    }
+  });
+</script>
+
+<%- include('../partials/footer') -%>

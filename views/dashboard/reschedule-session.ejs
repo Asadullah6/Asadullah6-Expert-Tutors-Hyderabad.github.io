@@ -1,0 +1,395 @@
+<%- include('../partials/header') -%>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  .page-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+  }
+
+  .session-info {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+
+  .info-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(74, 0, 224, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(74, 0, 224, 0.1);
+  }
+
+  .info-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+  }
+
+  .info-content {
+    flex: 1;
+  }
+
+  .info-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .info-value {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .reschedule-form {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #4a00e0;
+    box-shadow: 0 0 0 4px rgba(74, 0, 224, 0.1);
+  }
+
+  .form-textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #4a00e0, #8e44ad);
+    color: white;
+    box-shadow: 0 4px 15px rgba(74, 0, 224, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(74, 0, 224, 0.4);
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .alert-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #856404;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .page-header {
+      padding: 1.5rem;
+    }
+    
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">Reschedule Session</h1>
+    <p class="page-subtitle">Update the date and time for this tutoring session</p>
+  </div>
+
+  <div class="session-info">
+    <h2 class="info-title">
+      📋 Current Session Details
+    </h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-icon">👤</div>
+        <div class="info-content">
+          <div class="info-label">Student</div>
+          <div class="info-value"><%= session.student?.name || session.studentName || 'Unknown' %></div>
+        </div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-icon">📚</div>
+        <div class="info-content">
+          <div class="info-label">Subject</div>
+          <div class="info-value"><%= session.subject || 'Not specified' %></div>
+        </div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-icon">📅</div>
+        <div class="info-content">
+          <div class="info-label">Current Date</div>
+          <div class="info-value"><%= session.date || 'TBD' %></div>
+        </div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-icon">🕐</div>
+        <div class="info-content">
+          <div class="info-label">Current Time</div>
+          <div class="info-value"><%= session.time || 'TBD' %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reschedule-form">
+    <h2 class="form-title">
+      📅 New Schedule Details
+    </h2>
+    
+    <div class="alert alert-warning">
+      ⚠️ The student will be notified about this schedule change via email.
+    </div>
+
+    <form method="POST" action="/session/reschedule/<%= session._id %>">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date" class="form-label">New Date</label>
+          <input 
+            type="date" 
+            id="date" 
+            name="date" 
+            class="form-input"
+            value="<%= session.date || '' %>"
+            min="<%= new Date().toISOString().split('T')[0] %>"
+            required
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="time" class="form-label">New Time</label>
+          <input 
+            type="time" 
+            id="time" 
+            name="time" 
+            class="form-input"
+            value="<%= session.time || '' %>"
+            required
+          />
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="reason" class="form-label">Reason for Rescheduling (Optional)</label>
+        <textarea 
+          id="reason" 
+          name="reason" 
+          class="form-input form-textarea"
+          placeholder="Let the student know why you're rescheduling this session..."
+        ></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <a href="/my-bookings" class="btn btn-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>
+          Cancel
+        </a>
+        
+        <button type="submit" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+          </svg>
+          Reschedule Session
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Set minimum date to today
+  document.getElementById('date').min = new Date().toISOString().split('T')[0];
+  
+  // Form validation
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    
+    if (!date || !time) {
+      e.preventDefault();
+      alert('Please fill in both date and time fields.');
+      return;
+    }
+    
+    const selectedDate = new Date(date + 'T' + time);
+    const now = new Date();
+    
+    if (selectedDate <= now) {
+      e.preventDefault();
+      alert('Please select a future date and time.');
+      return;
+    }
+    
+    // Confirm rescheduling
+    if (!confirm('Are you sure you want to reschedule this session? The student will be notified.')) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+<%- include('../partials/footer') -%>

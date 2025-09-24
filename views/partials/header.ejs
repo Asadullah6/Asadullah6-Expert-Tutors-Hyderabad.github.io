@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TechConnect</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f8f9fa; }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    header h1 { color: #4a00e0; font-size: 1.8rem; }
+    nav a { margin: 0 1rem; text-decoration: none; color: #333; }
+    nav a:hover { color: #4a00e0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TechConnect</h1>
+    <nav>
+      <% if (locals.user) { %>
+        <span>Welcome, <%= locals.user.name %>!</span>
+        <a href="/auth/logout">Logout</a>
+      <% } else { %>
+        <a href="/auth/login">Login</a>
+        <a href="/auth/register">Sign up</a>
+      <% } %>
+      
+      
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  <% if (typeof messages !== 'undefined') { %>
+    <% if (messages.error && messages.error.length > 0) { %>
+      <div style="max-width:600px; margin:1rem auto; padding:1rem; background:#ffeaea; color:red; border-radius:5px; text-align:center;">
+        <%= messages.error %>
+      </div>
+    <% } %>
+    <% if (messages.success && messages.success.length > 0) { %>
+      <div style="max-width:600px; margin:1rem auto; padding:1rem; background:#eaffea; color:green; border-radius:5px; text-align:center;">
+        <%= messages.success %>
+      </div>
+    <% } %>
+  <% } %>
+
+  <main>

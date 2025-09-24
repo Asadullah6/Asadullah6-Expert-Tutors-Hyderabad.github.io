@@ -1,0 +1,141 @@
+<%- include('../partials/header') -%>
+
+<div style="background-color: #f8f9fa; min-height: 100vh; padding: 2rem 0;">
+    <main style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+        
+        <!-- Page Title -->
+        <div style="text-align: left; margin-bottom: 3rem;">
+            <h1 style="color: #2d3436; font-size: 2.5rem; font-weight: 700; margin: 0;">Find a Tech Mentor</h1>
+        </div>
+
+        <% if (!mentors || mentors.length === 0) { %>
+            <!-- No Mentors Available -->
+            <div style="text-align: center; padding: 4rem 0;">
+                <div style="background: white; border-radius: 16px; padding: 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-width: 500px; margin: 0 auto;">
+                    <h3 style="color: #636e72; font-size: 1.5rem; margin-bottom: 1rem;">No mentors available at the moment.</h3>
+                    <p style="color: #81878f; margin: 0;">Check back later for new mentors joining our platform.</p>
+                </div>
+            </div>
+        <% } else { %>
+            <!-- Mentors Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <% mentors.forEach(mentor => { %>
+                    <div style="
+                        background: white; 
+                        border-radius: 16px; 
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+                        padding: 2rem; 
+                        text-align: center;
+                        transition: all 0.3s ease;
+                        border: 1px solid rgba(0,0,0,0.05);
+                    " 
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.12)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';">
+                        
+                        <!-- Mentor Name -->
+                        <h3 style="color: #2d3436; font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem;">
+                            <%= mentor.user?.name || 'Anonymous' %>
+                        </h3>
+                        
+                        <!-- Location -->
+                        <p style="color: #636e72; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                            <strong>Location:</strong> <%= mentor.user?.location || 'Not specified' %>
+                        </p>
+                        
+                        <!-- Skills Label -->
+                        <p style="color: #2d3436; font-weight: 600; margin: 1.5rem 0 0.5rem 0; font-size: 0.95rem;">Skills:</p>
+                        
+                        <!-- Skills Tags -->
+                        <div style="margin-bottom: 1.5rem; min-height: 60px; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 0.5rem;">
+                            <% if (mentor.skills && mentor.skills.length > 0) { %>
+                                <% mentor.skills.slice(0, 5).forEach(skill => { %>
+                                    <span style="
+                                        background: linear-gradient(135deg, #6c5ce7, #a55eea); 
+                                        color: white; 
+                                        padding: 0.4rem 0.8rem; 
+                                        border-radius: 20px; 
+                                        font-size: 0.8rem; 
+                                        font-weight: 500;
+                                        display: inline-block;
+                                        box-shadow: 0 2px 8px rgba(108, 92, 231, 0.3);
+                                    ">
+                                        <%= skill.trim() %>
+                                    </span>
+                                <% }); %>
+                            <% } else { %>
+                                <span style="color: #81878f; font-style: italic; font-size: 0.9rem;">No skills specified</span>
+                            <% } %>
+                        </div>
+                        
+                        <!-- Location (if different from above) -->
+                        <p style="color: #636e72; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                            <strong>Location:</strong> <%= mentor.user?.location || 'Hyderabad' %>
+                        </p>
+                        
+                        <!-- Experience -->
+                        <p style="color: #636e72; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                            <strong>Experience:</strong> <%= mentor.experience || 0 %> years
+                        </p>
+                        
+                        <!-- Hourly Rate -->
+                        <p style="color: #636e72; margin-bottom: 2rem; font-size: 0.95rem;">
+                            <strong>Hourly Rate:</strong> PKR <%= mentor.hourlyRate || 0 %>/hr
+                        </p>
+                        
+                        <!-- Book Session Button -->
+                        <a href="/book/<%= mentor.user._id %>" style="text-decoration: none;">
+                            <button style="
+                                padding: 0.8rem 1.5rem;
+                                background: linear-gradient(135deg, #74b9ff, #0984e3);
+                                color: white;
+                                border: none;
+                                border-radius: 25px;
+                                font-size: 0.95rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+                                min-width: 140px;
+                            "
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(116, 185, 255, 0.4)';"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(116, 185, 255, 0.3)';">
+                                Book Session
+                            </button>
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </main>
+</div>
+
+<style>
+/* Additional responsive styling */
+@media (max-width: 768px) {
+    main {
+        padding: 0 1rem !important;
+    }
+    
+    h1 {
+        font-size: 2rem !important;
+        text-align: center !important;
+    }
+    
+    .mentor-card {
+        padding: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .mentors-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+    
+    h1 {
+        font-size: 1.8rem !important;
+    }
+}
+</style>
+
+<%- include('../partials/footer') -%>

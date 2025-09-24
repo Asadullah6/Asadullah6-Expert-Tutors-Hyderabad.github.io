@@ -1,0 +1,314 @@
+<%- include('../partials/header') -%>
+
+<div style="background-color: #f8f9fa; min-height: 100vh; padding: 2rem 0;">
+  <div style="max-width: 700px; margin: 0 auto; background: white; padding: 3rem 2.5rem; border-radius: 16px; box-shadow: 0 4px 30px rgba(0,0,0,0.08);">
+    
+    <!-- Header Section -->
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h1 style="color: #2d3436; font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem;">
+        Edit Session
+      </h1>
+      <div style="background: linear-gradient(135deg, #fdcb6e, #e17055); padding: 0.8rem 1.5rem; border-radius: 25px; display: inline-block; margin-bottom: 1rem;">
+        <span style="color: white; font-weight: 600; font-size: 1.1rem;">
+          Update Your Session Details
+        </span>
+      </div>
+      <p style="color: #636e72; font-size: 1rem; margin: 0;">
+        Make changes to your session information below
+      </p>
+    </div>
+
+    <!-- Current Session Info Card -->
+    <div style="background: linear-gradient(135deg, #fff9e6, #fef5e7); border: 1px solid #f39c12; border-radius: 12px; padding: 1.5rem; margin-bottom: 2.5rem;">
+      <h3 style="color: #d68910; font-size: 1.2rem; font-weight: 600; margin: 0 0 1rem 0;">
+        Current Session Details
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div>
+          <strong style="color: #2d3436;">Subject:</strong> 
+          <span style="color: #636e72;"><%= session.subject || 'Not specified' %></span>
+        </div>
+        <div>
+          <strong style="color: #2d3436;">Date:</strong> 
+          <span style="color: #636e72;"><%= session.date || 'Not specified' %></span>
+        </div>
+        <div>
+          <strong style="color: #2d3436;">Time:</strong> 
+          <span style="color: #636e72;"><%= session.time || 'Not specified' %></span>
+        </div>
+        <div>
+          <strong style="color: #2d3436;">Status:</strong> 
+          <span style="background: #f39c12; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; text-transform: uppercase;">
+            <%= session.status || 'pending' %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <form action="/session/edit/<%= session._id %>" method="POST" style="display: flex; flex-direction: column;">
+      
+      <!-- Subject Field -->
+      <div style="margin-bottom: 1.8rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.6rem; font-size: 1rem;">
+          Session Subject <span style="color: #e17055;">*</span>
+        </label>
+        <input 
+          type="text" 
+          name="subject" 
+          value="<%= session.subject || '' %>"
+          required 
+          placeholder="e.g., React Component Architecture, Database Design..."
+          style="
+            width: 100%; 
+            padding: 1rem 1.2rem; 
+            border: 2px solid #e9ecef; 
+            border-radius: 10px; 
+            font-size: 1rem;
+            background-color: #ffffff;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+          "
+          onfocus="this.style.borderColor='#fdcb6e'; this.style.backgroundColor='#fefefe';"
+          onblur="this.style.borderColor='#e9ecef';"
+        />
+      </div>
+
+      <!-- Date and Time Row -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.8rem;">
+        
+        <!-- Date Field -->
+        <div>
+          <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.6rem; font-size: 1rem;">
+            Date <span style="color: #e17055;">*</span>
+          </label>
+          <input 
+            type="date" 
+            name="date" 
+            value="<%= session.date || '' %>"
+            required
+            min="<%= new Date().toISOString().split('T')[0] %>"
+            style="
+              width: 100%; 
+              padding: 1rem 1.2rem; 
+              border: 2px solid #e9ecef; 
+              border-radius: 10px; 
+              font-size: 1rem;
+              background-color: #ffffff;
+              box-sizing: border-box;
+              transition: all 0.3s ease;
+            "
+            onfocus="this.style.borderColor='#fdcb6e';"
+            onblur="this.style.borderColor='#e9ecef';"
+          />
+        </div>
+
+        <!-- Time Field -->
+        <div>
+          <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.6rem; font-size: 1rem;">
+            Time <span style="color: #e17055;">*</span>
+          </label>
+          <input 
+            type="time" 
+            name="time" 
+            value="<%= session.time || '' %>"
+            required
+            style="
+              width: 100%; 
+              padding: 1rem 1.2rem; 
+              border: 2px solid #e9ecef; 
+              border-radius: 10px; 
+              font-size: 1rem;
+              background-color: #ffffff;
+              box-sizing: border-box;
+              transition: all 0.3s ease;
+            "
+            onfocus="this.style.borderColor='#fdcb6e';"
+            onblur="this.style.borderColor='#e9ecef';"
+          />
+        </div>
+      </div>
+
+      <!-- Notes Field -->
+      <div style="margin-bottom: 2.5rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.6rem; font-size: 1rem;">
+          Additional Notes <span style="color: #81878f; font-weight: 400;">(Optional)</span>
+        </label>
+        <textarea 
+          name="notes" 
+          placeholder="Add any specific topics you'd like to discuss, questions you have, or updates to your session..."
+          style="
+            width: 100%; 
+            height: 120px;
+            padding: 1rem 1.2rem; 
+            border: 2px solid #e9ecef; 
+            border-radius: 10px; 
+            font-size: 1rem;
+            background-color: #ffffff;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s ease;
+          "
+          onfocus="this.style.borderColor='#fdcb6e';"
+          onblur="this.style.borderColor='#e9ecef';"
+        ><%= session.notes || '' %></textarea>
+      </div>
+
+      <!-- Important Notice -->
+      <div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 10px; padding: 1.2rem; margin-bottom: 2rem;">
+        <h4 style="color: #1565c0; margin: 0 0 0.8rem 0; font-size: 1rem;">Important Notes</h4>
+        <ul style="color: #1976d2; margin: 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.5;">
+          <li>Changes to date and time require mentor approval</li>
+          <li>You can only edit sessions with 'pending' status</li>
+          <li>Major changes may affect your mentor's availability</li>
+        </ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button 
+          type="submit" 
+          style="
+            flex: 2;
+            min-width: 200px;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(253, 203, 110, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          "
+          onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(253, 203, 110, 0.4)';"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(253, 203, 110, 0.3)';"
+        >
+          Update Session
+        </button>
+        
+        <a href="/sessions" style="text-decoration: none; flex: 1; min-width: 120px;">
+          <button 
+            type="button"
+            style="
+              width: 100%;
+              padding: 1.2rem;
+              background: transparent;
+              color: #636e72;
+              border: 2px solid #e9ecef;
+              border-radius: 50px;
+              font-size: 1rem;
+              font-weight: 600;
+              cursor: pointer;
+              transition: all 0.3s ease;
+            "
+            onmouseover="this.style.borderColor='#636e72'; this.style.color='#2d3436';"
+            onmouseout="this.style.borderColor='#e9ecef'; this.style.color='#636e72';"
+          >
+            Cancel
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 2rem 1.5rem !important;
+    margin: 1rem !important;
+  }
+  
+  .date-time-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .action-buttons {
+    flex-direction: column !important;
+  }
+  
+  .action-buttons button,
+  .action-buttons a {
+    flex: none !important;
+    min-width: auto !important;
+  }
+  
+  h1 {
+    font-size: 1.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  h1 {
+    font-size: 1.6rem !important;
+  }
+  
+  .current-session-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+}
+
+/* Custom focus states */
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(253, 203, 110, 0.1);
+}
+
+/* Form validation styling */
+input:invalid {
+  border-color: #e17055;
+}
+
+input:valid {
+  border-color: #00b894;
+}
+</style>
+
+<script>
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+  const dateInput = document.querySelector('input[type="date"]');
+  if (dateInput) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+  }
+  
+  // Form validation
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    const subject = form.querySelector('input[name="subject"]').value.trim();
+    const date = form.querySelector('input[name="date"]').value;
+    const time = form.querySelector('input[name="time"]').value;
+    
+    if (!subject || !date || !time) {
+      e.preventDefault();
+      alert('Please fill in all required fields (Subject, Date, and Time)');
+      return false;
+    }
+    
+    // Check if date is not in the past
+    const selectedDate = new Date(date + 'T' + time);
+    const now = new Date();
+    
+    if (selectedDate <= now) {
+      e.preventDefault();
+      alert('Please select a date and time in the future');
+      return false;
+    }
+  });
+});
+</script>
+
+<%- include('../partials/footer') -%>

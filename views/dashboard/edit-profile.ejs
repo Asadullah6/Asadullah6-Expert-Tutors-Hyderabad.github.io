@@ -1,0 +1,214 @@
+<%- include('../partials/header') -%>
+
+<div style="background-color: #f8f9fa; min-height: 100vh; padding: 2rem 0;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; padding: 3rem 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    
+    <!-- Header Section -->
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+      <h1 style="color: #2d3436; font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem;">Edit Your Profile</h1>
+      <p style="color: #636e72; font-size: 1rem; margin: 0;">Update your mentor details below</p>
+    </div>
+
+    <!-- Form -->
+    <form action="/mentor/profile" method="POST" style="display: flex; flex-direction: column;">
+      
+      <!-- Skills Field -->
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          Skills (comma-separated)
+        </label>
+        <input 
+          type="text" 
+          name="skills" 
+          value="<%= mentor?.skills?.join(', ') || '' %>" 
+          placeholder="APP DEVELOPMENT, Full Stack Developer, frontend"
+          style="
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+          "
+          onfocus="this.style.borderColor='#6c5ce7'; this.style.backgroundColor='#fff';"
+          onblur="this.style.borderColor='#ddd'; this.style.backgroundColor='#f8f9fa';"
+        />
+      </div>
+
+      <!-- Bio Field -->
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          Bio
+        </label>
+        <div style="position: relative;">
+          <textarea 
+            name="bio" 
+            placeholder="Tell students about yourself..."
+            style="
+              width: 100%; 
+              height: 100px;
+              padding: 0.75rem 1rem; 
+              border: 1px solid #ddd; 
+              border-radius: 8px; 
+              font-size: 0.95rem;
+              background-color: #f8f9fa;
+              box-sizing: border-box;
+              resize: vertical;
+              font-family: inherit;
+              transition: all 0.2s ease;
+            "
+            onfocus="this.style.borderColor='#6c5ce7'; this.style.backgroundColor='#fff';"
+            onblur="this.style.borderColor='#ddd'; this.style.backgroundColor='#f8f9fa';"
+          ><%= mentor?.bio || '' %></textarea>
+          <div style="position: absolute; bottom: 8px; right: 12px; font-size: 0.8rem; color: #999;">
+            <span id="charCount">11</span> / <span style="color: #6c5ce7;">5</span> PM
+          </div>
+        </div>
+      </div>
+
+      <!-- Experience Field -->
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          Experience (Years)
+        </label>
+        <input 
+          type="number" 
+          name="experience" 
+          value="<%= mentor?.experience || 8 %>" 
+          min="0"
+          style="
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+          "
+          onfocus="this.style.borderColor='#6c5ce7'; this.style.backgroundColor='#fff';"
+          onblur="this.style.borderColor='#ddd'; this.style.backgroundColor='#f8f9fa';"
+        />
+      </div>
+
+      <!-- Hourly Rate Field -->
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          Hourly Rate (PKR)
+        </label>
+        <input 
+          type="number" 
+          name="hourlyRate" 
+          value="<%= mentor?.hourlyRate || 1000 %>" 
+          min="0"
+          style="
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+          "
+          onfocus="this.style.borderColor='#6c5ce7'; this.style.backgroundColor='#fff';"
+          onblur="this.style.borderColor='#ddd'; this.style.backgroundColor='#f8f9fa';"
+        />
+      </div>
+
+      <!-- GitHub URL Field -->
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          GitHub URL
+        </label>
+        <input 
+          type="url" 
+          name="github" 
+          value="<%= mentor?.github || '' %>" 
+          placeholder="https://github.com/yourname"
+          style="
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+          "
+          onfocus="this.style.borderColor='#6c5ce7'; this.style.backgroundColor='#fff';"
+          onblur="this.style.borderColor='#ddd'; this.style.backgroundColor='#f8f9fa';"
+        />
+      </div>
+
+      <!-- LinkedIn URL Field -->
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; color: #2d3436; margin-bottom: 0.5rem; font-size: 0.95rem;">
+          LinkedIn URL
+        </label>
+        <input 
+          type="url" 
+          name="linkedin" 
+          value="<%= mentor?.linkedin || '' %>" 
+          placeholder="https://linkedin.com/in/yourname"
+          style="
+            width: 100%; 
+            padding: 0.75rem 1rem; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            background-color: #f8f9fa;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+          "
+          onfocus="this.style.borderColor='#6c5ce7'; this.style.backgroundColor='#fff';"
+          onblur="this.style.borderColor='#ddd'; this.style.backgroundColor='#f8f9fa';"
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        style="
+          width: 100%;
+          padding: 1rem;
+          background: linear-gradient(135deg, #6c5ce7, #a55eea);
+          color: white;
+          border: none;
+          border-radius: 50px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        "
+        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(108, 92, 231, 0.4)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(108, 92, 231, 0.3)';"
+      >
+        Update Profile
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+// Character count for bio field
+document.addEventListener('DOMContentLoaded', function() {
+  const bioTextarea = document.querySelector('textarea[name="bio"]');
+  const charCount = document.getElementById('charCount');
+  
+  if (bioTextarea && charCount) {
+    function updateCharCount() {
+      const length = bioTextarea.value.length;
+      charCount.textContent = length;
+    }
+    
+    bioTextarea.addEventListener('input', updateCharCount);
+    updateCharCount(); // Initial count
+  }
+});
+</script>
+
+<%- include('../partials/footer') -%>
